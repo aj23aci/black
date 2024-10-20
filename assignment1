@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+# Original design covariance matrix and center
+design_covmat = np.array([[5.,4.],
+                          [4.,6.]]) 
+center = np.array([1,1.5]) 
+
+# Generate 10000 points (increase from 100 to 10000)
+blob = np.random.multivariate_normal(mean=center, cov=design_covmat, size=10000)
+
+# PCA
+pca = PCA()
+pca.fit(blob)
+blob_pca = pca.transform(blob)
+
+# Plotting the transformed data
+ax = plt.gca()
+ax.scatter(blob_pca[:,0], blob_pca[:,1])
+ax.axis('scaled')
+t = ax.set_xlabel('PC 1')
+t = ax.set_ylabel('PC 2')
+
+# Compare covariance matrices
+computed_covmat = pca.get_covariance()
+print("Covariance matrix from PCA (10000 points):")
+print(computed_covmat)
+print()
+print("Design covariance matrix:")
+print(design_covmat)
+
+# Difference between the matrices
+difference = np.abs(computed_covmat - design_covmat)
+print("Difference between computed and design covariance matrix:")
+print(difference)
